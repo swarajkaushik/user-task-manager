@@ -1,9 +1,7 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 const validator = require("validator");
-const { compare, hash } = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const TOKEN_SIGNATURE = process.env.TOKEN_SIGNATURE;
+const { hash } = require("bcrypt");
 
 const tokenSchema = new mongoose.Schema(
   {
@@ -67,36 +65,20 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
 
   delete userObject.password;
-  delete userObject.tokens;
+  //   delete userObject.tokens;
 
   return userObject;
 };
 
-userSchema.methods.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, TOKEN_SIGNATURE);
+// userSchema.methods.generateAuthToken = async function () {
+//   const user = this;
+//   const token = jwt.sign({ _id: user._id.toString() }, TOKEN_SIGNATURE);
 
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
+//   user.tokens = user.tokens.concat({ token });
+//   await user.save();
 
-  return token;
-};
-
-userSchema.statics.findByCredentials = async (email, password) => {
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    throw new Error("Unable to login");
-  }
-
-  const isMatch = await compare(password, user.password);
-
-  if (!isMatch) {
-    throw new Error("Unable to login");
-  }
-
-  return user;
-};
+//   return token;
+// };
 
 // Hash the plain text password before saving
 userSchema.pre("save", async function (next) {
