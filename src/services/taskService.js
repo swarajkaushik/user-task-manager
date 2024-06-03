@@ -17,13 +17,15 @@ class TaskService {
 
   async getTaskById(payload) {
     try {
-      const task = await Task.findOne({
+      let task = await Task.findOne({
         _id: payload.taskId,
         isDeleted: false,
       });
       if (!task) {
         throw new Error("Task not found");
       }
+      let subtasks = task.subtasks.filter((task) => task.isDeleted === false);
+      task.subtasks = subtasks;
       return task;
     } catch (error) {
       throw error;
