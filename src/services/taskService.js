@@ -96,6 +96,22 @@ class TaskService {
       throw new Error("Error fetching tasks");
     }
   }
+
+  async getAllSubtasks(payload, authUser) {
+    try {
+      let tasks = await Task.findOne({ _id: payload?.taskId, owner: authUser });
+
+      if (!tasks) {
+        throw new Error("Subtasks not found");
+      }
+
+      let subtasks = tasks.subtasks.filter((task) => task.isDeleted === false);
+      return subtasks;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching tasks");
+    }
+  }
 }
 
 module.exports = TaskService;

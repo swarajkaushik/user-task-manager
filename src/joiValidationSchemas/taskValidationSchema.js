@@ -32,9 +32,14 @@ const deleteTaskSchema = Joi.object({
   isDeleted: Joi.boolean().required(),
 });
 
+const fetchSubTaskSchema = Joi.object({
+  taskId: Joi.string().pattern(objectIdPattern).required(),
+});
+
 module.exports = {
   postTaskSchema,
   fetchByIdTaskSchema,
   updateTaskSchema,
   deleteTaskSchema,
+  fetchSubTaskSchema,
 };

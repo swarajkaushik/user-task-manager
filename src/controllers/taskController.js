@@ -5,6 +5,7 @@ const {
   fetchByIdTaskSchema,
   updateTaskSchema,
   deleteTaskSchema,
+  fetchSubTaskSchema,
 } = require("../joiValidationSchemas/taskValidationSchema");
 
 class TaskController {
@@ -123,6 +124,33 @@ class TaskController {
         success: false,
         error: error.message,
         message: "Cannot fetch the tasks",
+      });
+    }
+  }
+
+  async getAllSubtasks(req, res) {
+    try {
+      const validatedValue = JoiValidationHelper(
+        fetchSubTaskSchema,
+        req?.params
+      );
+      const response = await taskServiceIns.getAllSubtasks(
+        validatedValue,
+        req?.user?._id
+      );
+      return res.status(200).json({
+        data: response,
+        success: true,
+        error: {},
+        message: "Successfully fetched the subtasks",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        data: {},
+        success: false,
+        error: error.message,
+        message: "Cannot fetch the subtasks",
       });
     }
   }

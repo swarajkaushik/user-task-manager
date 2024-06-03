@@ -29,4 +29,11 @@ router.get("", auth, async (req, res) => {
   return result;
 });
 
+// sub-tasks routes
+
+router.get("/:taskId/subtasks", auth, async (req, res) => {
+  const result = await taskControllerIns.getAllSubtasks(req, res);
+  return result;
+});
+
 module.exports = router;
