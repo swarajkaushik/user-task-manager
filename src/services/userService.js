@@ -18,6 +18,7 @@ class UserService {
       return user;
     } catch (error) {
       console.error(error);
+      throw new Error(error);
     }
   }
 
@@ -50,7 +51,8 @@ class UserService {
       res.json({ token });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Server error" });
+      // res.status(500).json({ error: "Server error" });
+      throw new Error(error);
     }
   }
 }
