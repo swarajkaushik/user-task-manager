@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { isDecimal } = require("validator");
 
 const subtaskSchema = Joi.object({
   subject: Joi.string().required(),
@@ -26,8 +27,14 @@ const updateTaskSchema = Joi.object({
   status: Joi.string().valid("pending", "completed").default("pending"),
 });
 
+const deleteTaskSchema = Joi.object({
+  taskId: Joi.string().pattern(objectIdPattern).required(),
+  isDeleted: Joi.boolean().required(),
+});
+
 module.exports = {
   postTaskSchema,
   fetchByIdTaskSchema,
   updateTaskSchema,
+  deleteTaskSchema,
 };

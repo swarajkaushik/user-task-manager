@@ -50,6 +50,26 @@ class TaskService {
       throw error;
     }
   }
+
+  async deleteTask(payload) {
+    const taskId = payload.taskId;
+    delete payload.taskId;
+    try {
+      const task = await Task.findOneAndUpdate(
+        {
+          _id: taskId,
+        },
+        {
+          isDeleted: payload.isDeleted,
+        },
+        { new: true }
+      );
+
+      return task;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = TaskService;

@@ -4,6 +4,7 @@ const {
   postTaskSchema,
   fetchByIdTaskSchema,
   updateTaskSchema,
+  deleteTaskSchema,
 } = require("../joiValidationSchemas/taskValidationSchema");
 
 class TaskController {
@@ -79,6 +80,29 @@ class TaskController {
         success: false,
         error: error.message,
         message: "Cannot update the task",
+      });
+    }
+  }
+
+  async deleteTask(req, res) {
+    try {
+      const finalPayload = { ...req?.body, taskId: req.params.taskId };
+      const validatedValue = JoiValidationHelper(
+        deleteTaskSchema,
+        finalPayload
+      );
+      await taskServiceIns.deleteTask(validatedValue);
+      return res.status(204).json({
+        success: true,
+        error: {},
+        message: "Successfully deleted the task",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        message: "Cannot delete the task",
       });
     }
   }
