@@ -1,10 +1,10 @@
 const Joi = require("joi");
-const { isDecimal } = require("validator");
 
 const subtaskSchema = Joi.object({
   subject: Joi.string().required(),
   deadline: Joi.date().iso().required(),
   status: Joi.string().valid("pending", "completed").default("pending"),
+  isDeleted: Joi.boolean(),
 });
 
 const postTaskSchema = Joi.object({
@@ -36,10 +36,16 @@ const fetchSubTaskSchema = Joi.object({
   taskId: Joi.string().pattern(objectIdPattern).required(),
 });
 
+const updateSubtaskSchema = Joi.object({
+  taskId: Joi.string().pattern(objectIdPattern).required(),
+  subtasks: Joi.array().items(subtaskSchema).default([]).required(),
+});
+
 module.exports = {
   postTaskSchema,
   fetchByIdTaskSchema,
   updateTaskSchema,
   deleteTaskSchema,
   fetchSubTaskSchema,
+  updateSubtaskSchema,
 };

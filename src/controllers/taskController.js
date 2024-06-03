@@ -6,6 +6,7 @@ const {
   updateTaskSchema,
   deleteTaskSchema,
   fetchSubTaskSchema,
+  updateSubtaskSchema,
 } = require("../joiValidationSchemas/taskValidationSchema");
 
 class TaskController {
@@ -39,7 +40,10 @@ class TaskController {
         fetchByIdTaskSchema,
         req?.params
       );
-      const response = await taskServiceIns.getTaskById(validatedValue);
+      const response = await taskServiceIns.getTaskById(
+        validatedValue,
+        req?.user?._id
+      );
       return res.status(200).json({
         data: response,
         success: true,
@@ -92,7 +96,7 @@ class TaskController {
         deleteTaskSchema,
         finalPayload
       );
-      await taskServiceIns.deleteTask(validatedValue);
+      await taskServiceIns.deleteTask(validatedValue, req?.user?._id);
       return res.status(204).json({
         success: true,
         error: {},
@@ -151,6 +155,37 @@ class TaskController {
         success: false,
         error: error.message,
         message: "Cannot fetch the subtasks",
+      });
+    }
+  }
+
+  async updateSubtask(req, res) {
+    try {
+      const finalPayload = {
+        ...req?.body,
+        taskId: req.params.taskId,
+      };
+      const validatedValue = JoiValidationHelper(
+        updateSubtaskSchema,
+        finalPayload
+      );
+      const response = await taskServiceIns.updateSubtask(
+        validatedValue,
+        req?.user?._id
+      );
+      return res.status(200).json({
+        data: response,
+        success: true,
+        error: {},
+        message: "Successfully updated the subtask",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        data: {},
+        success: false,
+        error: error.message,
+        message: "Cannot update the subtask",
       });
     }
   }

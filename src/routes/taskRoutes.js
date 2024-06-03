@@ -36,4 +36,9 @@ router.get("/:taskId/subtasks", auth, async (req, res) => {
   return result;
 });
 
+router.patch("/:taskId/subtasks", auth, async (req, res) => {
+  const result = await taskControllerIns.updateSubtask(req, res);
+  return result;
+});
+
 module.exports = router;

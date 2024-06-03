@@ -15,10 +15,11 @@ class TaskService {
     }
   }
 
-  async getTaskById(payload) {
+  async getTaskById(payload, authUser) {
     try {
       let task = await Task.findOne({
         _id: payload.taskId,
+        owner: authUser,
         isDeleted: false,
       });
       if (!task) {
@@ -32,13 +33,14 @@ class TaskService {
     }
   }
 
-  async updateTask(payload) {
+  async updateTask(payload, authUser) {
     const taskId = payload.taskId;
     delete payload.taskId;
     try {
       const task = await Task.findOneAndUpdate(
         {
           _id: taskId,
+          owner: authUser,
           isDeleted: false,
         },
         payload,
@@ -51,13 +53,14 @@ class TaskService {
     }
   }
 
-  async deleteTask(payload) {
+  async deleteTask(payload, authUser) {
     const taskId = payload.taskId;
     delete payload.taskId;
     try {
       const task = await Task.findOneAndUpdate(
         {
           _id: taskId,
+          owner: authUser,
         },
         {
           isDeleted: payload.isDeleted,
@@ -110,6 +113,28 @@ class TaskService {
     } catch (error) {
       console.error(error);
       throw new Error("Error fetching tasks");
+    }
+  }
+
+  async updateSubtask(payload, authUser) {
+    const taskId = payload.taskId;
+    delete payload.taskId;
+    try {
+      const task = await Task.findOneAndUpdate(
+        {
+          _id: taskId,
+          owner: authUser,
+        },
+        payload,
+        { new: true }
+      );
+
+      if (!task) throw new Error("Invalid reques");
+
+      return task;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error updating subtasks");
     }
   }
 }
