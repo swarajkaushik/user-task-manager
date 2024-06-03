@@ -1,14 +1,15 @@
 const { verify } = require("jsonwebtoken");
-const User = require("../mongo-schemas/User");
+const User = require("../models/User");
 require("dotenv").config();
-const password_key = process.env.PASSWORD_KEY;
+const TOKEN_SIGNATURE = process.env.TOKEN_SIGNATURE;
 
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = verify(token, password_key);
+    const decoded = verify(token, TOKEN_SIGNATURE);
+
     const user = await User.findOne({
-      _id: decoded._id,
+      _id: decoded.id,
       "tokens.token": token,
     });
 
