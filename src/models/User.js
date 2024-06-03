@@ -52,12 +52,7 @@ const userSchema = new Schema({
     },
   },
   tokens: [tokenSchema],
-});
-
-userSchema.virtual("tasks", {
-  ref: "Task",
-  localField: "_id",
-  foreignField: "owner",
+  tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
 });
 
 userSchema.methods.toJSON = function () {
@@ -65,20 +60,9 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
 
   delete userObject.password;
-  //   delete userObject.tokens;
 
   return userObject;
 };
-
-// userSchema.methods.generateAuthToken = async function () {
-//   const user = this;
-//   const token = jwt.sign({ _id: user._id.toString() }, TOKEN_SIGNATURE);
-
-//   user.tokens = user.tokens.concat({ token });
-//   await user.save();
-
-//   return token;
-// };
 
 // Hash the plain text password before saving
 userSchema.pre("save", async function (next) {
@@ -88,13 +72,6 @@ userSchema.pre("save", async function (next) {
     user.password = await hash(user.password, 8);
   }
 
-  next();
-});
-
-// Delete user tasks when user is removed
-userSchema.pre("remove", async function (next) {
-  const user = this;
-  await deleteMany({ owner: user._id });
   next();
 });
 
