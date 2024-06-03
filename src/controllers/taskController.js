@@ -106,6 +106,26 @@ class TaskController {
       });
     }
   }
+
+  async getAllTasks(req, res) {
+    try {
+      const response = await taskServiceIns.getAllTasks(req?.user?._id);
+      return res.status(200).json({
+        data: response,
+        success: true,
+        error: {},
+        message: "Successfully fetched the tasks",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        data: {},
+        success: false,
+        error: error.message,
+        message: "Cannot fetch the tasks",
+      });
+    }
+  }
 }
 
 module.exports = TaskController;

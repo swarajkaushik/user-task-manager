@@ -24,4 +24,9 @@ router.delete("/:taskId", auth, async (req, res) => {
   return result;
 });
 
+router.get("", auth, async (req, res) => {
+  const result = await taskControllerIns.getAllTasks(req, res);
+  return result;
+});
+
 module.exports = router;

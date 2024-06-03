@@ -70,6 +70,32 @@ class TaskService {
       throw error;
     }
   }
+
+  async getAllTasks(authUser) {
+    try {
+      let tasks = await Task.find({
+        owner: authUser,
+        isDeleted: false,
+      });
+
+      if (!tasks || tasks.length === 0) {
+        throw new Error("No tasks found");
+      }
+
+      // Filter out deleted subtasks for each task
+      tasks = tasks.map((task) => {
+        task.subtasks = task.subtasks.filter(
+          (subtask) => subtask.isDeleted === false
+        );
+        return task;
+      });
+
+      return tasks;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching tasks");
+    }
+  }
 }
 
 module.exports = TaskService;
