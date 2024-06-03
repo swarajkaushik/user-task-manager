@@ -9,4 +9,9 @@ router.post("/create", auth, async (req, res) => {
   return result;
 });
 
+router.get("/getById/:taskId", auth, async (req, res) => {
+  const result = await taskControllerIns.getTaskById(req, res);
+  return result;
+});
+
 module.exports = router;

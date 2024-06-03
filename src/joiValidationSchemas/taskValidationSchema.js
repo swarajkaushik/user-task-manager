@@ -13,6 +13,13 @@ const postTaskSchema = Joi.object({
   subtasks: Joi.array().items(subtaskSchema).default([]),
 });
 
+const objectIdPattern = /^[0-9a-fA-F]{24}$/;
+
+const fetchByIdTaskSchema = Joi.object({
+  taskId: Joi.string().pattern(objectIdPattern).required(),
+});
+
 module.exports = {
   postTaskSchema,
+  fetchByIdTaskSchema,
 };
