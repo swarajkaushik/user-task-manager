@@ -4,13 +4,18 @@ const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.post("/create", auth, async (req, res) => {
+router.post("", auth, async (req, res) => {
   const result = await taskControllerIns.postTask(req, res);
   return result;
 });
 
-router.get("/getById/:taskId", auth, async (req, res) => {
+router.get("/:taskId", auth, async (req, res) => {
   const result = await taskControllerIns.getTaskById(req, res);
+  return result;
+});
+
+router.put("/:taskId", auth, async (req, res) => {
+  const result = await taskControllerIns.updateTask(req, res);
   return result;
 });
 

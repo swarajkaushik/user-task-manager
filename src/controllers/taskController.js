@@ -3,6 +3,7 @@ const { taskServiceIns } = require("../services/index");
 const {
   postTaskSchema,
   fetchByIdTaskSchema,
+  updateTaskSchema,
 } = require("../joiValidationSchemas/taskValidationSchema");
 
 class TaskController {
@@ -50,6 +51,34 @@ class TaskController {
         success: false,
         error: error.message,
         message: "Cannot fetch the task",
+      });
+    }
+  }
+
+  async updateTask(req, res) {
+    try {
+      const finalPayload = { ...req?.body, taskId: req.params.taskId };
+      const validatedValue = JoiValidationHelper(
+        updateTaskSchema,
+        finalPayload
+      );
+      const response = await taskServiceIns.updateTask(
+        validatedValue,
+        req?.user?._id
+      );
+      return res.status(200).json({
+        data: response,
+        success: true,
+        error: {},
+        message: "Successfully updated the task",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        data: {},
+        success: false,
+        error: error.message,
+        message: "Cannot update the task",
       });
     }
   }

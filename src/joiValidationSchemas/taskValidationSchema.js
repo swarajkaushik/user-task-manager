@@ -19,7 +19,15 @@ const fetchByIdTaskSchema = Joi.object({
   taskId: Joi.string().pattern(objectIdPattern).required(),
 });
 
+const updateTaskSchema = Joi.object({
+  taskId: Joi.string().pattern(objectIdPattern).required(),
+  subject: Joi.string(),
+  deadline: Joi.date().iso(),
+  status: Joi.string().valid("pending", "completed").default("pending"),
+});
+
 module.exports = {
   postTaskSchema,
   fetchByIdTaskSchema,
+  updateTaskSchema,
 };

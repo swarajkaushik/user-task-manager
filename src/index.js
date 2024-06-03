@@ -13,7 +13,7 @@ const setupAndStartServer = async () => {
   app.use(bodyParse.urlencoded({ extended: true }));
 
   app.use("/api/users", UserRoutes);
-  app.use("/api/task", TaskRoutes);
+  app.use("/api/tasks", TaskRoutes);
 
   app.listen(PORT, async () => {
     console.log(`Server is started at PORT: ${PORT}`);

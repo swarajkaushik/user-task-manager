@@ -31,6 +31,25 @@ class TaskService {
       throw error;
     }
   }
+
+  async updateTask(payload) {
+    const taskId = payload.taskId;
+    delete payload.taskId;
+    try {
+      const task = await Task.findOneAndUpdate(
+        {
+          _id: taskId,
+          isDeleted: false,
+        },
+        payload,
+        { new: true }
+      );
+
+      return task;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = TaskService;
